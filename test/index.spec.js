@@ -32,7 +32,7 @@ test("delete a key", async () => {
 });
 
 test("add many keys quickly at once and have size set properly", async () => {
-  await db.set(`key${rand(5)}`, rand(12));
+  await db.set(`getMeLater`, rand(12));
   await db.set(`key${rand(5)}`, rand(12));
   await db.set(`key${rand(5)}`, rand(12));
   await db.set(`key${rand(5)}`, rand(12));
@@ -48,10 +48,21 @@ test("find a single key:value", async () => {
   expect(found).toBe("Found!");
 });
 
+test("existance", async () => {
+  const exists = await db.has("findMe");
+  expect(exists).not.toBeFalsy();
+});
+
 test("update a key, after a set has been used", async () => {
   await db.set("findMe", "I have been updated!");
   const foundAgain = await db.get("findMe");
   expect(foundAgain).toBe("I have been updated!");
+});
+
+test("get multiple keys, as an object of objects", async () => {
+  const { findMe, getMeLater } = await db.getMany(["findMe", "getMeLater"]);
+  expect(findMe).not.toBeUndefined();
+  expect(getMeLater).not.toBeUndefined();
 });
 
 test("give a list of all keys", () => {
